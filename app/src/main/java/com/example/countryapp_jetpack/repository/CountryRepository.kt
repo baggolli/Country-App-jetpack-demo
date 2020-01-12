@@ -26,7 +26,12 @@ class CountryRepository {
             override fun onResponse(call: Call<MutableList<Country>>?, response: Response<MutableList<Country>>?) {
                 isLoading.postValue(false)
                 val countryList = response?.body()?.map { CountryEntity(name = it.name, capital = it.capital, population = it.population, flag = it.flag) }
-                Thread(Runnable { countryDao?.upsertCountry(countryList) }).start()
+                Thread(Runnable {
+                    countryDao?.apply {
+                        deleteAllCountries()
+                        upsertCountry(countryList)
+                    }
+                }).start()
             }
             override fun onFailure(call: Call<MutableList<Country>>?, throwable: Throwable?) {
                 isLoading.postValue(false)

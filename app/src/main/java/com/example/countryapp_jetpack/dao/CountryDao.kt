@@ -20,4 +20,7 @@ abstract class CountryDao {
         insertAllCountries(entities)
         updateAllCountries(entities)
     }
+
+    @Query("DELETE FROM Countries")
+    abstract fun deleteAllCountries()
 }
